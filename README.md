@@ -73,7 +73,7 @@ Download the YCSB zip file and compile:
 
 ### 4. Run YCSB
 
-Now you are ready to run! First, use the asynchronous driver to load the data:
+Now you are ready to run! First, use the eXtremeDB driver to load the data:
 
     ./bin/ycsb load eXtremeDB -s -P workloads/workloada > outputLoad.txt
 
@@ -81,7 +81,7 @@ Then, run the workload:
 
     ./bin/ycsb run eXtremeDB -s -P workloads/workloada > outputRun.txt
         
-See the next section for the list of configuration parameters for MongoDB.
+See the next section for the list of configuration parameters for eXtremeDB.
 
 ## Log Level Control
 Due to the eXtremeDB driver defaulting to a log level of DEBUG, a logback.xml file is included with this module that restricts the org.eXtremeDB logging to WARN. You can control this by overriding the logback.xml and defining it in your ycsb command by adding this flag:
@@ -93,58 +93,18 @@ bin/ycsb run eXtremeDB -jvm-args="-Dlogback.configurationFile=/path/to/logback.x
 ## eXtremeDB Configuration Parameters
 
 - `eXtremeDB.url`
-  - This should be a eXtremeDB URI or connection string. 
+  - This should be an eXtremeDB URI or connection string. 
     - See http://docs.eXtremeDB.org/manual/reference/connection-string/ for the standard options.
       - http://www.allanbank.com/eXtremeDB-driver/apidocs/index.html?com/allanbank/mongodb/MongoDbUri.html
     - For the complete set of options for the synchronous driver see:
       - http://api.eXtremeDB.org/java/current/index.html?com/eXtremeDB/eXtremeDBClientURI.html
-  - Default value is `eXtremeDB://localhost:27017/ycsb?w=1`
+  - Default value is `eXtremeDB://localhost:8083/ycsb?w=1`
   - Default value of database is `ycsb`
 
-- `mongodb.batchsize`
+- `eXtremeDB.batchsize`
   - Useful for the insert workload as it will submit the inserts in batches inproving throughput.
   - Default value is `1`.
 
-- `mongodb.upsert`
-  - Determines if the insert operation performs an update with the upsert operation or a insert. 
-    Upserts have the advantage that they will continue to work for a partially loaded data set.
-  - Setting to `true` uses updates, `false` uses insert operations.
-  - Default value is `false`.
-
-- `mongodb.writeConcern`
-  - **Deprecated** - Use the `w` and `journal` options on the MongoDB URI provided by the `mongodb.url`.
-  - Allowed values are :
-    - `errors_ignored`
-    - `unacknowledged`
-    - `acknowledged`
-    - `journaled`
-    - `replica_acknowledged`
-    - `majority`
-  - Default value is `acknowledged`.
- 
-- `mongodb.readPreference`
-  - **Deprecated** - Use the `readPreference` options on the MongoDB URI provided by the `mongodb.url`.
-  - Allowed values are :
-    - `primary`
-    - `primary_preferred`
-    - `secondary`
-    - `secondary_preferred`
-    - `nearest`
-  - Default value is `primary`.
- 
-- `mongodb.maxconnections`
-  - **Deprecated** - Use the `maxPoolSize` options on the MongoDB URI provided by the `mongodb.url`.
-  - Default value is `100`.
-
-- `mongodb.threadsAllowedToBlockForConnectionMultiplier`
-  - **Deprecated** - Use the `waitQueueMultiple` options on the MongoDB URI provided by the `mongodb.url`.
-  - Default value is `5`.
-
 For example:
 
-    ./bin/ycsb load mongodb-async -s -P workloads/workloada -p mongodb.url=mongodb://localhost:27017/ycsb?w=0
-
-To run with the synchronous driver from MongoDB Inc.:
-
-    ./bin/ycsb load mongodb -s -P workloads/workloada -p mongodb.url=mongodb://localhost:27017/ycsb?w=0
-
+    ./bin/ycsb load eXtremeDB -s -P workloads/workloada -p eXtremeDB.url=eXtremeDB://localhost:8083/ycsb?w=0
